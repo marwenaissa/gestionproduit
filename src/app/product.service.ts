@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, updateDoc, doc, deleteDoc, getDocs, DocumentReference, DocumentData } from '@angular/fire/firestore';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-
-
+import { catchError } from 'rxjs/operators';
 export interface Product {
-  id?: string; // Firestore utilise des chaînes comme identifiants
+  id: number;
   name: string;
   price: number;
 }
@@ -14,44 +12,31 @@ export interface Product {
   providedIn: 'root'
 })
 export class ProductService {
-  constructor(private firestore: Firestore) {}
+  private apiUrl = 'assets/products.json';
 
-  // Récupérer tous les produits
+  constructor(private http: HttpClient) {}
+
   getProducts(): Observable<Product[]> {
-    const productsRef = collection(this.firestore, 'products');
-    return new Observable<Product[]>(subscriber => {
-      getDocs(productsRef).then(snapshot => {
-        const products: Product[] = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data() as Product
-        }));
-        subscriber.next(products);
-        subscriber.complete();
-      });
-    });
+    return this.http.get<Product[]>(this.apiUrl);
   }
 
-  // Ajouter un nouveau produit
-  addProduct(product: Product): Promise<DocumentReference<DocumentData>> {
-    const productsRef = collection(this.firestore, 'products');
-    return addDoc(productsRef, product); // Retourne la référence du document ajouté
+  // Méthodes pour créer, mettre à jour et supprimer des produits
+  addProduct(product: Product): Observable<Product> {
+  
+    // Vous pouvez implémenter l'ajout ici, mais cela nécessite de gérer un stockage local
+    return this.http.post<Product>(this.apiUrl, product); // Simulé
   }
 
-  // Mettre à jour un produit existant
-  updateProduct(product: Product): Promise<void> {
-    if (!product.id) {
-      throw new Error("ID du produit requis pour la mise à jour.");
-    }
-    const productDoc = doc(this.firestore, `products/${product.id}`);
-    return updateDoc(productDoc, {
-      name: product.name,
-      price: product.price
-    });
+  updateProduct(product: Product): Observable<Product> {
+    // Idem pour la mise à jour
+    return this.http.put<Product>(`${this.apiUrl}/${product.id}`, product); // Simulé
   }
 
-  // Supprimer un produit
-  deleteProduct(id: string): Promise<void> {
-    const productDoc = doc(this.firestore, `products/${id}`);
-    return deleteDoc(productDoc);
+  deleteProduct(id: number): Observable<void> {
+    // Simulé pour la suppression
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  // Méthodes pour créer, mettre à jour et supprimer des produits
+  // (À développer en fonction de vos besoins)
 }

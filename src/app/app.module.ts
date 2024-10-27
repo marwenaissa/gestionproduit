@@ -1,19 +1,30 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { RouteReuseStrategy } from '@angular/router';
+import { ProductListComponent } from './product-list/product-list.component';
+import { HttpClientModule } from '@angular/common/http';
+
+import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
-import { environment } from '../environments/environment'; // Chemin relatif
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
-  declarations: [AppComponent],
+  
+  declarations: [AppComponent,ProductListComponent],
   imports: [
+    
+    // ... autres imports
+    ReactiveFormsModule,
+  
     BrowserModule,
-    provideFirebaseApp(() => initializeApp(environment.firebase)), // Initialisation de Firebase
-    provideFirestore(() => getFirestore()), // Configuration de Firestore
+    IonicModule.forRoot(),
+    AppRoutingModule,
+    HttpClientModule
+     // Ajoutez cette ligne
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
