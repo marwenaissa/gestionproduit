@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Liste des Produits</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+  <form [formGroup]="productForm" (ngSubmit)="editingProduct ? updateProduct() : addProduct()">
+    <ion-item>
+      <ion-label position="floating">Nom du produit</ion-label>
+      <ion-input formControlName="name" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Prix du produit</ion-label>
+      <ion-input formControlName="price" type="number" required></ion-input>
+    </ion-item>
+    <ion-button expand="full" type="submit">
+      {{ editingProduct ? 'Mettre à jour' : 'Ajouter' }}
+    </ion-button>
+  </form>
+
+  <ion-list>
+    <ion-item *ngFor="let product of products">
+      <ion-label>
+        <h2>{{ product.name }}</h2>
+        <p>Prix : {{ product.price | currency }}</p>
+      </ion-label>
+      <ion-button (click)="editProduct(product)" fill="outline">Éditer</ion-button>
+      <ion-button (click)="deleteProduct(product.id)" fill="outline">Supprimer</ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>
