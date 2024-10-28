@@ -9,13 +9,12 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
-  productForm!: FormGroup; // Utilisation de l'opérateur d'affirmation non nulle
+  productForm!: FormGroup; 
   editingProduct: Product | null = null;
 
   constructor(private productService: ProductService, private fb: FormBuilder) {}
 
   ngOnInit(): void {
-    // Initialisation du FormGroup ici
     this.productForm = this.fb.group({
       id: [null],
       name: [''],
@@ -36,27 +35,20 @@ export class ProductListComponent implements OnInit {
   }
 
   addProduct(): void {
-    console.log('add');
     const product: Product = this.productForm.value;
-
- 
-      this.productService.addProduct(product).subscribe((newProduct) => {
+    this.productService.addProduct(product).subscribe((newProduct) => {
       this.products.push(newProduct);
       this.productForm.reset();
-      this.editingProduct = null; // Réinitialise l'état d'édition
-
+      this.editingProduct = null; 
     });
   }
-  
+
   editProduct(product: Product): void {
-    console.log('edit');
-    
     this.editingProduct = product;
     this.productForm.setValue({ id: product.id, name: product.name, price: product.price });
   }
-  
+
   updateProduct(): void {
-    console.log('update');
     const product: Product = this.productForm.value;
     this.productService.updateProduct(product).subscribe((updatedProduct) => {
       const index = this.products.findIndex(p => p.id === updatedProduct.id);
