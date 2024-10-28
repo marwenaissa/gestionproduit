@@ -5,7 +5,24 @@
 </ion-header>
 
 <ion-content fullscreen>
-  <form [formGroup]="productForm" (ngSubmit)="editingProduct ? updateProduct() : addProduct()">
+
+
+   
+  
+  <br>
+  <br>
+  <br>
+  <br>
+  <!-- Conteneur pour aligner le bouton à droite -->
+  <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
+    <ion-button expand="default" (click)="showAddForm()">Ajouter un produit</ion-button>
+  </div>
+
+  <!-- Espace sous le bouton Ajouter -->
+  <div style="margin-bottom: 16px;"></div>
+
+  <!-- Formulaire d'ajout/édition -->
+  <form *ngIf="showForm" [formGroup]="productForm" (ngSubmit)="editingProduct ? updateProduct() : addProduct()">
     <ion-item>
       <ion-label position="floating">Nom du produit</ion-label>
       <ion-input formControlName="name" required></ion-input>
@@ -17,6 +34,7 @@
     <ion-button expand="full" type="submit">
       {{ editingProduct ? 'Mettre à jour' : 'Ajouter' }}
     </ion-button>
+    <ion-button expand="full" (click)="showForm = false">Annuler</ion-button>
   </form>
 
   <ion-list>
